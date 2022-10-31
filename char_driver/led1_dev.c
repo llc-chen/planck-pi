@@ -7,10 +7,12 @@
 #include <linux/device.h>    //含有类相关的设备函数
 #include <linux/cdev.h>
 
+
 #define  GPIOE_CFG0   (0x01C20890)
 #define  GPIOE_CFG1   (0x01C20894)
 #define  GPIOE_DATA   (0x01C208A0)
 #define  GPIOE_PUL0   (0x01C208AC)
+
 
 static dev_t led_dev_num;      //定义一个设备号
 static struct cdev *led_dev;   //定义一个设备管理结构体指针
@@ -130,4 +132,3 @@ MODULE_LICENSE("GPL");          //不加的话加载会有错误提醒
 MODULE_AUTHOR("1477153217@qq.com");     //作者
 MODULE_VERSION("0.1");          //版本
 MODULE_DESCRIPTION("led_dev");  //简单的描述
-
