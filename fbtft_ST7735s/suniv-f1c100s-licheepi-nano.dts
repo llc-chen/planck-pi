@@ -1,0 +1,68 @@
+// SPDX-License-Identifier: (GPL0.0+ OR X11)
+/*
+  Copyright 2018 Icenowy Zheng <icenowy@aosc.io>
+ */
+
+/dts-v1/;
+#include "suniv-f1c100s.dtsi"
+#include <dt-bindings/gpio/gpio.h>
+/ {
+	model = "Lichee Pi Nano";
+	compatible = "licheepi,licheepi-nano", "allwinner,suniv-f1c100s";
+
+	aliases {
+		serial0 = &uart0;
+	};
+
+	chosen {
+		stdout-path = "serial0:115200n8";
+	};
+       
+        led@0x01C20800 {
+                compatible = "lite200,led";
+                reg  =  < 0x01C20890 0x04     /* GPIOE_CFG0 */ 
+                          0x01C20894 0x04     /* GPIOE_CFG1 */  
+                          0x01C208A0 0x04     /* GPIOE_DATA */ 
+                          0x01C208AC 0x04 >;   /* GPIOE_PUL0 */
+                status = "okay";
+        };
+};
+
+/*reg_vcc3v3: vcc3v3 {
+    compatible = "regulator-fixed";
+    regulator-name = "vcc3v3";
+    regulator-min-microvolt = <3300000>;
+    regulator-max-microvolt = <3300000>;
+};
+*/
+&uart0 {
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart0_pe_pins>;
+	status = "okay";
+};
+
+&mmc0 { 
+        vmmc-supply = <&reg_vcc3v3>; 
+        bus-width = <4>;
+        broken-cd; 
+        status = "okay"; 
+};
+
+&spi0 {
+        //status ="okay";
+    	st7735r@0 {
+	    status ="okay";
+            compatible = "sitronix,st7735r";
+               reg = <0>;
+               spi-max-frequency =<48000000>;        //SPI时钟50M
+               rotate =<90>;                    //屏幕旋转90度
+               spi-cpol;
+               spi-cpha;
+               rgb;                           //颜色格式RGB
+               fps =<30>;                      //刷新30帧率
+               buswidth =<8>;                   //总线宽度8
+	       dc-gpios  =<&pio 3 0 GPIO_ACTIVE_LOW>;   //GPIOD0
+	       reset-gpios=<&pio 3 1 GPIO_ACTIVE_LOW>;   //GPIOD1 暂时测试后面dc板子会改成pb4
+               debug =<0>;                     //不开启调试
+        };
+};
